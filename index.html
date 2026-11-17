@@ -71,6 +71,29 @@
   input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(246,197,91,.18)}
 
   .grade{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 4px}
+  /* ===== ÁRVORE DE PRESENTES ===== */
+  .grade.arvore{display:block;position:relative;padding-top:2px}
+  .copa{position:relative;z-index:1;padding-top:6px;padding-bottom:6px}
+  .arvore .desenho{position:absolute;left:-3%;top:0;width:106%;height:100%;z-index:0}
+  .arvore .estrela{display:block;width:62px;height:62px;margin:0 auto -24px;position:relative;z-index:2}
+  .arvore .desenho{overflow:visible}
+  .luzinha{position:absolute;z-index:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--l);box-shadow:0 0 6px 2px var(--l);animation:brilha 2s ease-in-out infinite alternate}
+  @keyframes brilha{from{opacity:.55}to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.luzinha{animation:none}}
+  .galho{position:relative;z-index:1;display:flex;justify-content:center}
+  .arvore .pessoa{width:56px;flex:none;padding:2px 0 5px;gap:2px;border-radius:12px}
+  .arvore .pessoa span.n{font-size:10.5px;padding:0;overflow:visible;text-overflow:clip;max-width:none;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  .arvore .pessoa small{display:none}
+  .arvore .gift{width:46px;height:40px;margin-top:10px}
+  .arvore .gift .caixa{left:4px;right:4px;height:28px}
+  .arvore .gift .tampa{top:3px;height:11px}
+  .arvore .gift .laco{width:30px;height:14px;margin-left:-15px;top:-10px}
+  .tronco{position:relative;z-index:0;width:34px;height:20px;margin:-12px auto 0;
+          background:linear-gradient(90deg,#3e2310,#7a4a24 45%,#4a2a12);box-shadow:inset 0 5px 6px rgba(0,0,0,.45)}
+  .vaso{width:96px;height:34px;margin:0 auto;clip-path:polygon(0 0,100% 0,88% 100%,12% 100%);
+          background:linear-gradient(180deg,transparent 0 7px,#f6c55b 7px 11px,transparent 11px),linear-gradient(90deg,#9e1b28,#e23b4a 40%,#8e1422);
+          border-top:5px solid #c22b39}
+  .arvore .novo{display:block;width:100%;margin-top:14px}
   .pessoa{display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 2px 8px;border-radius:14px;border:1px solid transparent;
           background:transparent;color:var(--ink);font:700 13px "DM Sans",sans-serif;cursor:pointer;min-width:0;
           transition:background .2s,border-color .2s;animation:aparece .35s ease both}
@@ -279,13 +302,68 @@ function avatar(nome, cls){ const a = el("div", cls || "av", nome.trim().charAt(
 const primeiroNome = n => n.trim().split(" ")[0];
 
 // ===== grade de nomes =====
+// ===== Desenho da árvore (fica atrás dos presentes) =====
+// Cada camada é um "triângulo" com lados curvos e a borda de baixo em pontinhas de galho.
+function camada(topo, base, meia, pontas){
+  const e = 50 - meia, d = 50 + meia, passo = (d - e) / pontas, f = n => n.toFixed(2);
+  let p = `M50 ${f(topo)} Q${f(50 + meia * .32)} ${f(topo + (base - topo) * .62)} ${f(d)} ${f(base)}`;
+  for (let i = 0; i < pontas; i++) p += ` Q${f(d - passo * (i + .5))} ${f(base + 4.2)} ${f(d - passo * (i + 1))} ${f(base)}`;
+  return p + ` Q${f(50 - meia * .32)} ${f(topo + (base - topo) * .62)} 50 ${f(topo)}Z`;
+}
+const CAMADAS = [[0, 27, 19, 4], [11, 51, 30, 6], [28, 75, 40, 8], [47, 95, 50, 10]]; // topo, base, meia-largura, pontas
+const FESTOES = [[39, 21, 50, 27, 60, 18], [26, 47, 50, 56, 72, 43], [16, 70, 50, 80, 80, 65], [9, 92, 50, 100, 89, 86]]; // curvas do festão
+function desenhoArvore(){
+  let svg = '<svg class="desenho" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs>'
+    + '<linearGradient id="verde" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3aa56c"/><stop offset=".45" stop-color="#23804f"/><stop offset="1" stop-color="#14512f"/></linearGradient>'
+    + '<pattern id="agulhas" width="3" height="1.6" patternUnits="userSpaceOnUse"><path d="M0 1.2l1.5-.9 1.5.9" stroke="#0b3a22" stroke-width=".35" fill="none"/></pattern></defs>';
+  // de baixo para cima: cada camada joga sombra na de baixo
+  for (let i = CAMADAS.length - 1; i >= 0; i--){
+    const d = camada(...CAMADAS[i]);
+    if (i < CAMADAS.length - 1) svg += `<path d="${d}" fill="#06230f" opacity=".45" transform="translate(0 2.6)"/>`;
+    svg += `<path d="${d}" fill="url(#verde)"/><path d="${d}" fill="url(#agulhas)" opacity=".28"/>`;
+    const [t, bse, m] = CAMADAS[i];
+    svg += `<path d="M50 ${t + 1} Q${50 - m * .32} ${t + (bse - t) * .62} ${50 - m + 1.5} ${bse - .5}" stroke="#8fe3b4" stroke-width="2" fill="none" opacity=".35" vector-effect="non-scaling-stroke"/>`;
+  }
+  // festão dourado (contas)
+  svg += '<g fill="none" stroke="#f6c55b" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0.1 6">';
+  FESTOES.forEach(([x1, y1, cx, cy, x2, y2]) => svg += `<path d="M${x1} ${y1} Q${cx} ${cy} ${x2} ${y2}" vector-effect="non-scaling-stroke"/>`);
+  return svg + '</g></svg>';
+}
+// luzinhas sobre o festão (em HTML, para ficarem redondas mesmo com a árvore esticada)
+const CORES_LUZ = ["#ffd166", "#ff5d6c", "#fff3d6", "#7fd6ff", "#ff9f43"];
+function luzesArvore(){
+  let h = "", k = 0;
+  FESTOES.forEach(([x1, y1, cx, cy, x2, y2], fi) => {
+    const qtd = 4 + fi * 2;
+    for (let i = 1; i < qtd; i++){
+      const t = i / qtd, x = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * cx + t * t * x2, y = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * cy + t * t * y2;
+      const c = CORES_LUZ[k++ % CORES_LUZ.length];
+      h += `<i class="luzinha" style="left:${(-3 + x * 1.06).toFixed(2)}%;top:${y.toFixed(2)}%;--l:${c};animation-delay:-${(k * 0.37 % 2).toFixed(2)}s"></i>`;
+    }
+  });
+  return h;
+}
+const ARVORE = desenhoArvore() + luzesArvore();
+const ESTRELA = '<svg class="estrela" viewBox="0 0 60 60" aria-hidden="true"><defs><radialGradient id="brilho"><stop offset="0" stop-color="#fff3c4" stop-opacity=".9"/><stop offset="1" stop-color="#f6c55b" stop-opacity="0"/></radialGradient><linearGradient id="ouro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".5" stop-color="#f6c55b"/><stop offset="1" stop-color="#c98d2b"/></linearGradient></defs><circle cx="30" cy="30" r="29" fill="url(#brilho)"/><path d="M30 8l6.2 13.3 14.6 1.8-10.8 10 2.9 14.4L30 40.4l-12.9 7.1 2.9-14.4-10.8-10 14.6-1.8z" fill="url(#ouro)" stroke="#fff4cf" stroke-width="1.4" stroke-linejoin="round"/><path d="M30 8v32.4M30 40.4L50.8 23.1M30 40.4L9.2 23.1" stroke="#c98d2b" stroke-width=".8" opacity=".45"/></svg>';
+
 function desenharGrade(){
   const filtro = norm($("busca").value);
-  const box = $("grade"); box.innerHTML = "";
+  const box = $("grade"); box.innerHTML = ""; box.classList.add("arvore");
   const lista = pessoas.filter(p => norm(p.nome).includes(filtro));
   if (!lista.length) box.appendChild(el("div", "vazio", filtro ? "Ninguém com esse nome 🤔" : "A lista ainda está vazia."));
+  let copa = box;
+  if (lista.length){
+    box.insertAdjacentHTML("beforeend", ESTRELA);
+    copa = el("div", "copa"); copa.insertAdjacentHTML("beforeend", ARVORE); box.appendChild(copa);
+  }
+  // presentes em fileiras: 1, 2, 3, 4… (cada fileira um a mais, até caber na largura)
+  const maxPorFila = Math.max(3, Math.floor((box.clientWidth || 336) / 56));
+  let fila = null, tamanho = 0, naFila = 0;
   lista.forEach((p, i) => {
-    const b = el("button", "pessoa"); b.type = "button"; b.style.animationDelay = Math.min(i * 25, 400) + "ms";
+    if (!fila || naFila >= tamanho){ fila = el("div", "galho"); copa.appendChild(fila); tamanho = Math.min(tamanho + 1, maxPorFila); naFila = 0; }
+    naFila++;
+    const b = el("button", "pessoa"); b.type = "button"; b.style.animationDelay = Math.min(i * 25, 500) + "ms";
+    b.setAttribute("aria-label", "Ver sugestões para " + p.nome);
     b.appendChild(presente(p.nome));
     b.appendChild(el("span", "n", primeiroNome(p.nome)));
     b.appendChild(el("small", "", p.itens.length + (p.itens.length === 1 ? " sugestão" : " sugestões")));
@@ -294,8 +372,9 @@ function desenharGrade(){
       b.classList.add("abrindo");
       setTimeout(() => { b.classList.remove("abrindo"); abrirPessoa(p.nome); }, 300);
     };
-    box.appendChild(b);
+    fila.appendChild(b);
   });
+  if (lista.length){ box.appendChild(el("div", "tronco")); box.appendChild(el("div", "vaso")); }
   const novo = el("button", "novo", "➕ Meu nome não está na lista");
   novo.type = "button"; novo.onclick = () => abrirEdicao(true);
   box.appendChild(novo);
