@@ -26,7 +26,7 @@
   @media (prefers-reduced-motion:reduce){.neve{display:none}.bola{animation:none!important}}
 
   /* ===== TOPO ===== */
-  .hero{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;padding:12px 6px 0 16px;min-height:118px}
+  .hero{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;padding:26px 6px 0 16px;min-height:132px}
   .kicker{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);
           border:1px solid rgba(246,197,91,.35);border-radius:999px;padding:4px 10px;background:rgba(246,197,91,.08)}
   .hero h1{font-family:Pacifico,cursive;font-weight:400;font-size:clamp(29px,9.4vw,40px);white-space:nowrap;line-height:1.15;margin-top:6px;
@@ -37,6 +37,27 @@
   .bola{transform-box:view-box;animation:balanca 3.2s ease-in-out infinite alternate}
   .bola.b{animation-duration:2.6s;animation-delay:-1s}.bola.c{animation-duration:3.8s;animation-delay:-2s}
   @keyframes balanca{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+
+  /* ===== VARAL DE LUZES ===== */
+  .luzes{position:absolute;top:0;left:0;width:100%;height:30px;pointer-events:none;z-index:2}
+  .luz{animation:pisca 1.6s ease-in-out infinite alternate}
+  .luz.l2{animation-delay:-.4s}.luz.l3{animation-delay:-.8s}.luz.l4{animation-delay:-1.2s}
+  @keyframes pisca{from{opacity:.45}to{opacity:1}}
+
+  /* ===== PRESENTES ===== */
+  .gift{position:relative;width:62px;height:54px;margin-top:12px;flex:none}
+  .gift .caixa{position:absolute;left:5px;right:5px;bottom:0;height:38px;border-radius:5px;
+    background:linear-gradient(90deg,transparent 41%,var(--f) 41% 59%,transparent 59%),linear-gradient(180deg,rgba(255,255,255,.1),rgba(0,0,0,.22)),var(--c);
+    box-shadow:0 8px 14px rgba(0,0,0,.35)}
+  .gift .tampa{position:absolute;left:0;right:0;top:4px;height:14px;border-radius:4px;transition:transform .25s ease;
+    background:linear-gradient(90deg,transparent 41%,var(--f) 41% 59%,transparent 59%),linear-gradient(180deg,rgba(255,255,255,.22),rgba(0,0,0,.08)),var(--c);
+    box-shadow:0 3px 5px rgba(0,0,0,.28)}
+  .gift .laco{position:absolute;left:50%;top:-13px;width:38px;height:18px;margin-left:-19px;color:var(--f)}
+  .pessoa:hover .tampa,.pessoa:focus-visible .tampa{transform:translateY(-5px) rotate(-4deg)}
+  .pessoa.abrindo .tampa{animation:abre .32s ease forwards}
+  @keyframes abre{to{transform:translate(12px,-28px) rotate(20deg);opacity:0}}
+  .gift.aberto .tampa{transform:translate(9px,-10px) rotate(18deg)}
+  .gift.aberto::after{content:"✨";position:absolute;left:50%;top:6px;transform:translateX(-50%);font-size:14px}
 
   /* ===== CONTEÚDO ===== */
   main{position:relative;z-index:1;flex:1;overflow:auto;padding:0 12px 16px}
@@ -49,14 +70,13 @@
   input::placeholder,textarea::placeholder{color:#6f8f7b}
   input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(246,197,91,.18)}
 
-  .grade{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .pessoa{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 10px;border-radius:16px;border:1px solid var(--line);
-          background:linear-gradient(160deg,var(--card2),var(--card));color:var(--ink);font:700 13.5px "DM Sans",sans-serif;cursor:pointer;
-          transition:transform .15s,border-color .15s;animation:aparece .35s ease both}
-  .pessoa:active{transform:scale(.96)}
-  .pessoa:hover{border-color:var(--gold)}
+  .grade{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 4px}
+  .pessoa{display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 2px 8px;border-radius:14px;border:1px solid transparent;
+          background:transparent;color:var(--ink);font:700 13px "DM Sans",sans-serif;cursor:pointer;min-width:0;
+          transition:background .2s,border-color .2s;animation:aparece .35s ease both}
+  .pessoa:hover,.pessoa:focus-visible{background:rgba(255,255,255,.04);border-color:var(--line);outline:none}
   .pessoa span.n{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
-  .pessoa small{font-size:10.5px;color:var(--muted);font-weight:500;margin-top:-4px}
+  .pessoa small{font-size:10.5px;color:var(--muted);font-weight:500;margin-top:-5px}
   @keyframes aparece{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .av{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font:700 18px "DM Sans",sans-serif;color:#fff;
       box-shadow:inset 0 -3px 0 rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.25);position:relative}
@@ -67,7 +87,7 @@
   /* detalhe */
   .topo-det{display:flex;align-items:center;gap:12px;margin:4px 0 12px}
   .voltar{flex:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--ink);font-size:20px;cursor:pointer}
-  .topo-det .av{width:52px;height:52px;font-size:22px}
+  .topo-det .gift{margin-top:14px}
   .topo-det h2{font-size:20px;line-height:1.15}
   .topo-det small{display:block;font-size:12.5px;color:var(--muted);font-weight:500}
   .itens{list-style:none;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:4px 12px}
@@ -93,6 +113,11 @@
   .msg.on{display:block}
   .msg.erro{background:rgba(226,59,74,.16);color:#ff9aa4;border:1px solid rgba(226,59,74,.45)}
   .msg.ok{background:rgba(246,197,91,.12);color:var(--gold);border:1px solid rgba(246,197,91,.4)}
+  @media (min-width:620px){
+    html{background:radial-gradient(circle at 12% 20%,rgba(226,59,74,.28) 0 60px,transparent 160px),radial-gradient(circle at 88% 30%,rgba(246,197,91,.22) 0 50px,transparent 150px),
+         radial-gradient(circle at 20% 85%,rgba(47,158,91,.28) 0 70px,transparent 180px),radial-gradient(circle at 82% 80%,rgba(226,59,74,.2) 0 60px,transparent 170px),#07170f}
+    body{margin:24px auto;height:calc(100% - 48px);border-radius:28px;border:1px solid var(--line);box-shadow:0 30px 90px rgba(0,0,0,.55)}
+  }
   footer{position:relative;z-index:1;text-align:center;font-size:11px;color:#5f8370;padding:4px 0 10px}
 </style>
 </head>
@@ -101,6 +126,26 @@
 <div class="neve" id="neve" aria-hidden="true"></div>
 
 <header class="hero">
+  <!-- Varal de luzes (desenhado em SVG) -->
+  <svg class="luzes" viewBox="0 0 480 30" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+    <path d="M0 6 Q15 12 30 7 T60 7 T90 7 T120 7 T150 7 T180 7 T210 7 T240 7 T270 7 T300 7 T330 7 T360 7 T390 7 T420 7 T450 7 T480 7" stroke="#2c4a38" stroke-width="1.6" fill="none"/>
+    <g class="luz l1"><circle cx="15" cy="16" r="7" fill="#ff4d5e" opacity=".25"/><rect x="13" y="7" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="15" cy="16" rx="3.6" ry="5.2" fill="#ff4d5e"/><ellipse cx="13.8" cy="14" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l2"><circle cx="45" cy="20" r="7" fill="#ffd166" opacity=".25"/><rect x="43" y="11" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="45" cy="20" rx="3.6" ry="5.2" fill="#ffd166"/><ellipse cx="43.8" cy="18" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l3"><circle cx="75" cy="16" r="7" fill="#4cd18a" opacity=".25"/><rect x="73" y="7" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="75" cy="16" rx="3.6" ry="5.2" fill="#4cd18a"/><ellipse cx="73.8" cy="14" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l4"><circle cx="105" cy="20" r="7" fill="#6ec6ff" opacity=".25"/><rect x="103" y="11" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="105" cy="20" rx="3.6" ry="5.2" fill="#6ec6ff"/><ellipse cx="103.8" cy="18" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l1"><circle cx="135" cy="16" r="7" fill="#ff8fb1" opacity=".25"/><rect x="133" y="7" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="135" cy="16" rx="3.6" ry="5.2" fill="#ff8fb1"/><ellipse cx="133.8" cy="14" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l2"><circle cx="165" cy="20" r="7" fill="#ff4d5e" opacity=".25"/><rect x="163" y="11" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="165" cy="20" rx="3.6" ry="5.2" fill="#ff4d5e"/><ellipse cx="163.8" cy="18" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l3"><circle cx="195" cy="16" r="7" fill="#ffd166" opacity=".25"/><rect x="193" y="7" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="195" cy="16" rx="3.6" ry="5.2" fill="#ffd166"/><ellipse cx="193.8" cy="14" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l4"><circle cx="225" cy="20" r="7" fill="#4cd18a" opacity=".25"/><rect x="223" y="11" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="225" cy="20" rx="3.6" ry="5.2" fill="#4cd18a"/><ellipse cx="223.8" cy="18" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l1"><circle cx="255" cy="16" r="7" fill="#6ec6ff" opacity=".25"/><rect x="253" y="7" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="255" cy="16" rx="3.6" ry="5.2" fill="#6ec6ff"/><ellipse cx="253.8" cy="14" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l2"><circle cx="285" cy="20" r="7" fill="#ff8fb1" opacity=".25"/><rect x="283" y="11" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="285" cy="20" rx="3.6" ry="5.2" fill="#ff8fb1"/><ellipse cx="283.8" cy="18" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l3"><circle cx="315" cy="16" r="7" fill="#ff4d5e" opacity=".25"/><rect x="313" y="7" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="315" cy="16" rx="3.6" ry="5.2" fill="#ff4d5e"/><ellipse cx="313.8" cy="14" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l4"><circle cx="345" cy="20" r="7" fill="#ffd166" opacity=".25"/><rect x="343" y="11" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="345" cy="20" rx="3.6" ry="5.2" fill="#ffd166"/><ellipse cx="343.8" cy="18" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l1"><circle cx="375" cy="16" r="7" fill="#4cd18a" opacity=".25"/><rect x="373" y="7" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="375" cy="16" rx="3.6" ry="5.2" fill="#4cd18a"/><ellipse cx="373.8" cy="14" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l2"><circle cx="405" cy="20" r="7" fill="#6ec6ff" opacity=".25"/><rect x="403" y="11" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="405" cy="20" rx="3.6" ry="5.2" fill="#6ec6ff"/><ellipse cx="403.8" cy="18" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l3"><circle cx="435" cy="16" r="7" fill="#ff8fb1" opacity=".25"/><rect x="433" y="7" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="435" cy="16" rx="3.6" ry="5.2" fill="#ff8fb1"/><ellipse cx="433.8" cy="14" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+    <g class="luz l4"><circle cx="465" cy="20" r="7" fill="#ff4d5e" opacity=".25"/><rect x="463" y="11" width="4" height="4" rx="1" fill="#3a5a46"/><ellipse cx="465" cy="20" rx="3.6" ry="5.2" fill="#ff4d5e"/><ellipse cx="463.8" cy="18" rx="1" ry="1.8" fill="#fff" opacity=".6"/></g>
+  </svg>
   <div>
     <span class="kicker">🎄 Lista de sugestões</span>
     <h1>Amigo Oculto</h1>
@@ -113,12 +158,6 @@
       <radialGradient id="gD" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#fff0c4"/><stop offset=".5" stop-color="#f6c55b"/><stop offset="1" stop-color="#b47a1c"/></radialGradient>
       <radialGradient id="gB" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#d9efe2"/><stop offset="1" stop-color="#7fae93"/></radialGradient>
     </defs>
-    <!-- galho -->
-    <path d="M0 6 Q65 16 130 4" stroke="#1f5a3a" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <g stroke="#2c7a4f" stroke-width="2.4" stroke-linecap="round">
-      <path d="M10 8l-4 7M22 10l-3 8M34 11l-2 8M46 12l-1 8M60 13v8M74 13l1 8M88 12l2 8M100 11l3 8M112 9l3 7M124 6l3 7"/>
-      <path d="M16 9l3 7M28 11l3 7M40 12l3 7M54 13l2 7M68 13l2 7M82 12l2 7M94 11l3 7M106 10l3 7M118 8l3 6"/>
-    </g>
     <!-- bola vermelha -->
     <g class="bola" style="transform-origin:30px 12px">
       <line x1="30" y1="12" x2="30" y2="44" stroke="#f6c55b" stroke-width="1.2"/>
@@ -222,6 +261,20 @@ function icone(t){ const s = norm(t); for (const [re, e] of REGRAS) if (re.test(
 // Cor do "enfeite" de cada pessoa
 const CORES = ["#e23b4a","#2f9e5b","#d9962a","#c2255c","#1c7c54","#b5651d","#d6336c","#3b8f6e"];
 function corDe(nome){ let h = 0; for (const ch of norm(nome)) h = (h * 31 + ch.charCodeAt(0)) % 997; return CORES[h % CORES.length]; }
+// Embrulhos: [cor da caixa, cor da fita]
+const EMBRULHOS = [["#c92a3a","#f6c55b"],["#1f7a4d","#f3e6c8"],["#e0a33a","#b51f30"],["#efe4cf","#c92a3a"],["#8f1d2c","#f6c55b"],["#2b8a6e","#ff6b7a"],["#2d5f9a","#e9eef5"]];
+const LACO = '<svg class="laco" viewBox="0 0 38 18" aria-hidden="true"><path d="M19 13C13 3 4 0 2 5s6 9 17 8zM19 13C25 3 34 0 36 5s-6 9-17 8z" fill="currentColor"/><path d="M19 13C15 9 9 6 7 7.5M19 13c4-4 10-7 12-5.5" stroke="rgba(0,0,0,.18)" stroke-width="1.2" fill="none"/><circle cx="19" cy="13" r="3.4" fill="currentColor"/><circle cx="19" cy="13" r="3.4" fill="rgba(0,0,0,.15)"/></svg>';
+function presente(nome, aberto){
+  // cor pela posição na lista (vizinhos nunca repetem); nome novo usa o próprio nome
+  let i = pessoas.findIndex(p => norm(p.nome) === norm(nome));
+  if (i < 0){ i = 0; for (const ch of norm(nome)) i = (i * 31 + ch.charCodeAt(0)) % 997; }
+  const [c, f] = EMBRULHOS[i % EMBRULHOS.length];
+  const g = el("div", "gift" + (aberto ? " aberto" : ""));
+  g.style.setProperty("--c", c); g.style.setProperty("--f", f);
+  g.appendChild(el("div", "caixa"));
+  const t = el("div", "tampa"); t.innerHTML = LACO; g.appendChild(t);
+  return g;
+}
 function avatar(nome, cls){ const a = el("div", cls || "av", nome.trim().charAt(0).toUpperCase()); a.style.background = "radial-gradient(circle at 35% 30%, rgba(255,255,255,.45), transparent 45%)," + corDe(nome); return a; }
 const primeiroNome = n => n.trim().split(" ")[0];
 
@@ -233,10 +286,14 @@ function desenharGrade(){
   if (!lista.length) box.appendChild(el("div", "vazio", filtro ? "Ninguém com esse nome 🤔" : "A lista ainda está vazia."));
   lista.forEach((p, i) => {
     const b = el("button", "pessoa"); b.type = "button"; b.style.animationDelay = Math.min(i * 25, 400) + "ms";
-    b.appendChild(avatar(p.nome));
+    b.appendChild(presente(p.nome));
     b.appendChild(el("span", "n", primeiroNome(p.nome)));
     b.appendChild(el("small", "", p.itens.length + (p.itens.length === 1 ? " sugestão" : " sugestões")));
-    b.onclick = () => abrirPessoa(p.nome);
+    b.onclick = () => { // a tampa "abre" e depois mostra as sugestões
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return abrirPessoa(p.nome);
+      b.classList.add("abrindo");
+      setTimeout(() => { b.classList.remove("abrindo"); abrirPessoa(p.nome); }, 300);
+    };
     box.appendChild(b);
   });
   const novo = el("button", "novo", "➕ Meu nome não está na lista");
@@ -253,7 +310,7 @@ function textoDoLink(url){
 function abrirPessoa(nome){
   atual = pessoas.find(p => norm(p.nome) === norm(nome));
   if (!atual) return mostrarVista("vNomes");
-  const av = $("detAv"); const novoAv = avatar(atual.nome); novoAv.id = "detAv"; av.replaceWith(novoAv);
+  const av = $("detAv"); const novoAv = presente(atual.nome, true); novoAv.id = "detAv"; av.replaceWith(novoAv);
   $("detNome").textContent = atual.nome;
   $("detQtd").textContent = atual.itens.length + (atual.itens.length === 1 ? " sugestão" : " sugestões");
   const ul = $("detItens"); ul.innerHTML = "";
