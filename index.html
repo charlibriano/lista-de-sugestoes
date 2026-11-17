@@ -77,8 +77,8 @@
   .arvore .desenho{position:absolute;left:-3%;top:0;width:106%;height:100%;z-index:0}
   .arvore .estrela{display:block;width:62px;height:62px;margin:0 auto -24px;position:relative;z-index:2}
   .arvore .desenho{overflow:visible}
-  .luzinha{position:absolute;z-index:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--l);box-shadow:0 0 6px 2px var(--l);animation:brilha 2s ease-in-out infinite alternate}
-  @keyframes brilha{from{opacity:.55}to{opacity:1}}
+  .luzinha{position:absolute;z-index:0;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--l);animation:brilha 1.5s ease-in-out infinite}
+  @keyframes brilha{0%,100%{opacity:.2;transform:scale(.75);box-shadow:0 0 0 0 var(--l)}45%,60%{opacity:1;transform:scale(1.15);box-shadow:0 0 9px 3px var(--l)}}
   @media (prefers-reduced-motion:reduce){.luzinha{animation:none}}
   .galho{position:relative;z-index:1;display:flex;justify-content:center}
   .arvore .pessoa{width:56px;flex:none;padding:2px 0 5px;gap:2px;border-radius:12px}
@@ -338,7 +338,9 @@ function luzesArvore(){
     for (let i = 1; i < qtd; i++){
       const t = i / qtd, x = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * cx + t * t * x2, y = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * cy + t * t * y2;
       const c = CORES_LUZ[k++ % CORES_LUZ.length];
-      h += `<i class="luzinha" style="left:${(-3 + x * 1.06).toFixed(2)}%;top:${y.toFixed(2)}%;--l:${c};animation-delay:-${(k * 0.37 % 2).toFixed(2)}s"></i>`;
+      // cada luzinha com velocidade e início sorteados = pisca-pisca aleatório
+      const dur = (0.7 + Math.random() * 1.8).toFixed(2), atraso = (Math.random() * 3).toFixed(2);
+      h += `<i class="luzinha" style="left:${(-3 + x * 1.06).toFixed(2)}%;top:${y.toFixed(2)}%;--l:${c};animation-duration:${dur}s;animation-delay:-${atraso}s"></i>`;
     }
   });
   return h;
